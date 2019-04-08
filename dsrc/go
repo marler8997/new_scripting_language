@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -ex
+nix-build
+./result/bin/script || true
+./result/bin/script does_not_exit || true
+./result/bin/script ../examples/hello_newscript

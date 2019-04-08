@@ -1,0 +1,20 @@
+#!/usr/bin/env newscript
+#
+# this is a version of the cleanup_bash script using the semantics of the new scripting language
+#
+
+# this script accepts a parameter that is a path called 'dir' whose default is /var/log
+anon path dir default /var/log
+named uint save_line_count default 50
+
+if call not_equal(call uid() 0)
+{
+    call print("Must be root to run this script")
+    call exit(87) # non-root exit error code
+}
+
+call execute(["tail" "-n" $save_line_count])(stdout call open("$dir/message.tmp" "w")))
+call execute(["mv" "$dir/messages.tmp" "$dir/messages"])
+
+call execute(["cat" "/dev/null"])(stdout call open("$dir/wtmp" "w"))
+call print("Log files in $dir have been cleaned up")
